@@ -1,0 +1,47 @@
+# Operating system specific files to ignore
+.DS_Store
+
+# Build and runtime files
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.*
+!.env.example
+/.reader-runtime/
+
+# Outputs and bulky files
+checkpoints/*
+!checkpoints/.gitkeep
+*embeddings/*
+logs/
+
+*.pth
+*.pt
+*.tif
+*.tiff
+*.png
+*.npy
+*.out
+*.zip
+*.geojson
+storage/
+
+# Local HF authoring checkouts and generated module payloads (not test fixtures)
+/module-workspace/
+/module-artifacts/
+
+# Personal working material belongs outside the code repository.
+# These prevent accidental re-addition; they are not a publication/security gate.
+/custom_docs/chat-imports/
+/custom_docs/review-findings/
+/custom_docs/archive/
+/custom_docs/*.pptx
+/custom_docs/*-deck-outline.md
+/custom_docs/product-trajectory.md
+/custom_docs/repropath-research-notes.md
+/custom_docs/imagesc-demand-evidence.md
+/private-notes/

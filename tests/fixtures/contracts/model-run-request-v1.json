@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "testModelRunLimits": {
+    "max_execution_seconds": 21600,
+    "max_request_canonical_bytes": 1000000,
+    "max_inputs": 16,
+    "max_units": 128,
+    "target_raster_per_input": {
+      "max_width": 4096,
+      "max_height": 4096,
+      "max_pixels": 16777216
+    },
+    "max_aggregate_target_raster_pixels": 33554432,
+    "max_aggregate_inclusion_mask_vertices": 1000000,
+    "max_recovery_state_bytes_per_unit": 10000000,
+    "max_recovery_state_bytes_per_run": 100000000,
+    "result": {
+      "max_transferred_bytes": 2000000,
+      "max_decoded_bytes": 3000000,
+      "max_record_bytes": 200000,
+      "max_features": 2000,
+      "max_vertices": 10000
+    },
+    "processing_raster": {
+      "max_width": 4096,
+      "max_height": 4096,
+      "max_pixels": 16777216
+    },
+    "intermediate_result": {
+      "max_transferred_bytes": 2000000,
+      "max_decoded_bytes": 3000000,
+      "max_record_bytes": 200000,
+      "max_features": 2000,
+      "max_vertices": 10000
+    }
+  },
+  "cases": [
+    {
+      "name": "finite",
+      "finiteFixtureCase": 0,
+      "targetRasterLimits": {
+        "max_width": 512,
+        "max_height": 384,
+        "max_pixels": 196608
+      },
+      "inputId": 0,
+      "actionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "modelRunId": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "outputGenerationId": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "requestSha256": "a81197e8c8879026f0b73fff165d8eef0006a284159bcde770fe577d28f8556f",
+      "acceptedSha256": "4ac55a89e1d69720944acf171952282280e0d7a9bb7177969df415daabf2a661"
+    },
+    {
+      "name": "core-halo-resume",
+      "finiteFixtureCase": 0,
+      "targetRasterLimits": {
+        "max_width": 511,
+        "max_height": 384,
+        "max_pixels": 196608
+      },
+      "largeRegionProfileCase": 1,
+      "inputId": 7,
+      "resumeFrom": {
+        "previous_run_id": "99999999-9999-4999-8999-999999999999",
+        "previous_manifest_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actionId": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "modelRunId": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "outputGenerationId": "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      "requestSha256": "0ee9aed9ac0d33e3b56314771a5e69f1be272ea87c9a9d13daff1c94861386d8",
+      "acceptedSha256": "ff214172cea93fe978b4c45becfc2e38c58f3028642d4a38289b39f6b91602f1"
+    },
+    {
+      "name": "global-decode",
+      "finiteFixtureCase": 0,
+      "targetRasterLimits": {
+        "max_width": 511,
+        "max_height": 384,
+        "max_pixels": 196608
+      },
+      "largeRegionProfileCase": 0,
+      "inputId": 9,
+      "actionId": "12121212-1212-4212-8212-121212121212",
+      "modelRunId": "13131313-1313-4313-8313-131313131313",
+      "outputGenerationId": "14141414-1414-4414-8414-141414141414",
+      "requestSha256": "36b1543bb0790f24d0318c464b4927ef6b35291fc89962b4f6bd579dd0f0726a",
+      "acceptedSha256": "039fb1cc810cff3ea4fa94d4ebdc5d7611059489adfb93ef5f7d7e7a94a414c8"
+    },
+    {
+      "name": "core-halo-custom-0",
+      "finiteFixtureCase": 0,
+      "targetRasterLimits": {
+        "max_width": 511,
+        "max_height": 384,
+        "max_pixels": 196608
+      },
+      "largeRegionProfileCase": 1,
+      "inputId": 7,
+      "resumeFrom": {
+        "previous_run_id": "99999999-9999-4999-8999-999999999999",
+        "previous_manifest_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actionId": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "modelRunId": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "outputGenerationId": "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      "requestSha256": "bee6396b56d8c2bd8b21fb3227b20af22dc935a566dc6be98f78cb1ab14b5eaa",
+      "acceptedSha256": "25a5e9db963030398a0ec8fd854ccd739ab6219953f743b28415366c9ce3997e",
+      "haloPxOverride": 0
+    },
+    {
+      "name": "core-halo-custom-256",
+      "finiteFixtureCase": 0,
+      "targetRasterLimits": {
+        "max_width": 511,
+        "max_height": 384,
+        "max_pixels": 196608
+      },
+      "largeRegionProfileCase": 1,
+      "inputId": 7,
+      "resumeFrom": {
+        "previous_run_id": "99999999-9999-4999-8999-999999999999",
+        "previous_manifest_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actionId": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "modelRunId": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+      "outputGenerationId": "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      "requestSha256": "75b00d174e76fa0e7ef0993d2b43040650f2f339e385b6eb67d2441c2718fcdc",
+      "acceptedSha256": "0d42733042557fd742a3c512188c501f3c9ed4990b703460490874c3019ea748",
+      "haloPxOverride": 256
+    }
+  ]
+}

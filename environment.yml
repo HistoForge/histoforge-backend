@@ -1,0 +1,35 @@
+name: histoforge-backend
+# Local development env. The Modal image is defined under histoforge/cloud and
+# carries the ML dependencies needed at inference time; nothing here is shipped
+# into that image. This environment powers CLI development, smoke scripts, and
+# the local quality gates. Install the package itself with `pip install -e ".[dev]"`.
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  # The Conda native library avoids loading a second bundled GLib on macOS.
+  # Modal is not Conda-based and therefore keeps openslide-bin in its lock.
+  - openslide=4.0.1
+  - pip:
+      - modal==1.4.3
+      - toml==0.10.2
+      - fastremap==1.20.0
+      - fill-voids==2.1.2
+      - numpy==2.2.6
+      - opencv-python-headless==5.0.0.93
+      - openslide-python==1.4.6
+      - JPype1==1.6.0
+      - rasterio==1.4.4
+      - safetensors==0.8.0
+      - scikit-image==0.25.2
+      - scipy==1.15.2
+      - timm==1.0.27
+      - tifffile==2025.5.10
+      - torch==2.12.1
+      - imagecodecs==2025.3.30
+      - numcodecs==0.13.1
+      - zarr==2.18.3
+      - pillow
+      - requests
+      - ruff==0.15.12

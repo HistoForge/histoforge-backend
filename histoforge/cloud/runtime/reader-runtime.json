@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "java": {
+    "version": "21.0.12.1+1-LTS",
+    "archive_url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
+    "sha256": "2413149700df0f7d440500a84a8f764c535f21e5a5e87d38328b64eec2c5b500"
+  },
+  "bioformats": {
+    "version": "8.5.0",
+    "jar_url": "https://downloads.openmicroscopy.org/bio-formats/8.5.0/artifacts/bioformats_package.jar",
+    "sha256": "c6e60665d53a334b66e4d635340151f403dfe57a64704c573dd4c03b873befb9"
+  },
+  "jvm_options": [
+    "-Xms32m",
+    "-Xmx256m",
+    "-XX:MaxDirectMemorySize=64m",
+    "-XX:ActiveProcessorCount=1",
+    "-XX:+UseSerialGC",
+    "-Djava.awt.headless=true",
+    "-Djavax.xml.accessExternalDTD=",
+    "-Djavax.xml.accessExternalSchema=",
+    "-Djavax.xml.accessExternalStylesheet="
+  ]
+}
