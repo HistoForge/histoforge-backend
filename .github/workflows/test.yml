@@ -1,0 +1,128 @@
+name: Test
+
+# Lint + format + tests using declared Python dependencies and the locked
+# Linux slide-reader runtime, so missing dependencies fail on a clean machine.
+# 3.10 is the floor from `requires-python`; 3.12 catches newer-runtime breakage.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      HISTOFORGE_JAVA_HOME: ${{ github.workspace }}/.reader-runtime/java
+      HISTOFORGE_BIOFORMATS_JAR: ${{ github.workspace }}/.reader-runtime/bioformats_package.jar
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: python -m pip install -e ".[dev]" uv==0.7.12
+
+      # Linux runtime identities require the actual reader binaries. Use the
+      # production installer and lock; never replace identity checks with stubs.
+      - name: Install and verify locked slide-reader runtime
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from histoforge.cloud.runtime.install_readers import install
+          from histoforge.cloud.sources.java_runtime import reader_runtime_inventory
+
+          install(
+              Path("histoforge/cloud/runtime/reader-runtime.json"),
+              Path(os.environ["HISTOFORGE_JAVA_HOME"]).parent,
+          )
+          inventory = reader_runtime_inventory()
+          assert inventory["installed"]
+          print(json.dumps({
+              "installed": inventory["installed"],
+              "bioformats_sha256": inventory["bioformats_sha256"],
+              "java_release": inventory["java_release"],
+          }, sort_keys=True))
+          PY
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Test
+        run: pytest -q
+
+      - name: Bundled CLI dependency lock is complete
+        run: |
+          uv pip compile pyproject.toml --universal --python-version 3.12.11 \
+            --constraint requirements-bundled-cli.lock \
+            --generate-hashes --only-binary :all: --no-annotate --no-header \
+            --output-file /tmp/requirements-bundled-cli.lock
+          diff -u requirements-bundled-cli.lock /tmp/requirements-bundled-cli.lock
+
+      # Exercise the same built wheel, hash-verified dependency closure, and private
+      # virtual environment used by the QuPath extension. The wheel excludes Torch and
+      # model weights but must construct the complete deployment graph locally.
+      - name: Bundled CLI wheel smoke
+        shell: bash
+        run: |
+          python -m pip wheel --no-deps --wheel-dir /tmp/histoforge-wheel .
+          wheel=$(find /tmp/histoforge-wheel -name 'histoforge-*.whl' -print -quit)
+          runtime=$(mktemp -d /tmp/histoforge-runtime.XXXXXX)
+          uv venv --quiet --clear --no-config --no-project \
+            --python 3.12.11 --managed-python "$runtime/venv"
+          uv pip install --quiet --no-config --python "$runtime/venv/bin/python" \
+            --require-hashes --no-build \
+            --requirements requirements-bundled-cli.lock
+          uv pip install --quiet --no-config --python "$runtime/venv/bin/python" \
+            --no-build --no-deps --no-index "$wheel"
+          "$runtime/venv/bin/histoforge" self-check --json
+
+  local-persistence:
+    name: Local persistence (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    env:
+      HISTOFORGE_LOCAL_PERSISTENCE_MATRIX: "true"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2022]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      # Install the laptop package and its core credential-codec dependencies,
+      # but keep this matrix independent of the image-reader/GPU dev stack.
+      - name: Install package and test runner
+        run: python -m pip install -e . pytest
+
+      - name: Verify private atomic deployment publication
+        run: >-
+          python -m pytest -q tests/test_deployment.py
+          --junitxml=build/test-results/local-persistence.xml
+
+      - name: Upload local-persistence test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-local-persistence-${{ matrix.os }}
+          path: build/test-results/
+          if-no-files-found: error
+          retention-days: 14

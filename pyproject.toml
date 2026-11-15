@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "histoforge"
+version = "0.1.4"
+description = "QuPath-native, train-your-own deep-learning platform for histopathology research"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "HistoForge contributors" }]
+keywords = ["histopathology", "digital-pathology", "qupath", "segmentation", "modal"]
+dependencies = [
+    "modal==1.4.3",
+    "rfc8785==0.1.4",
+    "toml==0.10.2",
+    "truststore==0.10.5",
+]
+
+[project.optional-dependencies]
+# These packages are needed only by the test suite and linter.
+# `httpx` + `huggingface_hub` back tests/test_errors.py, which exercises the
+# HF-error -> job-state mapping against real exception types. FastAPI backs the
+# real gateway route tests. NumPy/OpenCV run the target-raster scientific
+# golden; SciPy/fastremap/fill-voids support the managed trainer and Cellpose
+# decoder; Rasterio/scikit-image exercise the existing runner geometry stack;
+# Torch/timm/safetensors cover the exact first-party model-loading tests;
+# OpenSlide and
+# tifffile/imagecodecs/Zarr cover the Modal source reader. The checked-in Conda
+# environment supplies native OpenSlide on macOS; other platforms use the
+# self-contained native wheel.
+dev = [
+    "pytest",
+    "cryptography==48.0.0",  # Short-lived certificates for local HTTPS tests.
+    "httpx",
+    "huggingface_hub",
+    "fastapi==0.139.0",
+    "fastremap==1.20.0",
+    "fill-voids==2.1.2",
+    "numpy==2.2.6",
+    "opencv-python-headless==5.0.0.93",
+    "openslide-python==1.4.6",
+    "openslide-bin==4.0.1.2; sys_platform != 'darwin'",
+    "JPype1==1.6.0",
+    "rasterio==1.4.4",
+    "safetensors==0.8.0",
+    "scikit-image==0.25.2",
+    "scipy==1.15.2",
+    "shapely==2.1.2",
+    "timm==1.0.27",
+    "tifffile==2025.5.10",
+    "torch==2.12.1",
+    "imagecodecs==2025.3.30",
+    "numcodecs==0.13.1",
+    "zarr==2.18.3",
+    "ruff==0.15.12",
+]
+
+[project.scripts]
+histoforge = "histoforge.cli:main"
+
+[project.urls]
+Homepage = "https://huggingface.co/histoforge"
+
+[tool.hatch.build.targets.wheel]
+packages = ["histoforge"]
+# Module authoring lives in Hugging Face repositories. Offline module fixtures
+# and maintainer tooling live outside this package and are not shipped in the wheel.
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["histoforge", "scripts", "tests"]
+extend-exclude = ["histoforge/_vendor"]  # vendored third-party (forked) ML code
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # pycodestyle errors, pyflakes, isort
+
+[tool.ruff.format]
+quote-style = "double"

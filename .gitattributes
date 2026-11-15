@@ -1,0 +1,2 @@
+# Script-set identity hashes exact UTF-8 bytes, so checkout must preserve LF endings.
+*.groovy text eol=lf
